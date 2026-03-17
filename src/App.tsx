@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, ChevronRight, CheckCircle2, AlertCircle, Instagram, Twitter, BookOpen } from 'lucide-react';
+import { Mail, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Tablet } from 'lucide-react';
 
 // Supabase Configuration
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://erdbahuczgjgcvlylpna.supabase.co";
@@ -68,10 +68,12 @@ export default function App() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="relative group"
+          className="relative group flex flex-col space-y-4"
         >
-          <div className="absolute -inset-1 bg-gradient-to-r from-[#3B82F6] to-[#EF4444] rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-          <div className="relative aspect-[2/3] w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10">
+          <h2 className="text-[#3B82F6] font-mono text-sm tracking-[0.2em] uppercase text-center">Nia Monroe Presents</h2>
+          <div className="relative">
+            <div className="absolute -inset-1 bg-gradient-to-r from-[#3B82F6] to-[#EF4444] rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+            <div className="relative aspect-[2/3] w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10">
             <img 
               src="/cover.jpg" 
               alt="You Ain't The Only One Book Cover"
@@ -87,11 +89,12 @@ export default function App() {
             
             {/* Floating Badge */}
             <div className="absolute bottom-6 left-6 right-6 p-4 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg">
-              <p className="text-xs uppercase tracking-widest text-[#3B82F6] font-bold mb-1">Now Available</p>
+              <p className="text-xs uppercase tracking-widest text-[#3B82F6] font-bold mb-1">Part 1 Available on Amazon</p>
               <p className="text-sm text-slate-300 italic">"The secret is out, and it's louder than you think."</p>
             </div>
           </div>
-        </motion.div>
+        </div>
+      </motion.div>
 
         {/* Right Column: Content */}
         <motion.div 
@@ -101,7 +104,6 @@ export default function App() {
           className="flex flex-col space-y-8"
         >
           <div className="space-y-4">
-            <h2 className="text-[#3B82F6] font-mono text-sm tracking-[0.2em] uppercase">Nia Monroe Presents</h2>
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[0.9]">
               You Ain't <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F8FAFC] to-[#94A3B8]">The Only One</span>
@@ -177,12 +179,18 @@ export default function App() {
 
           {/* Social Proof / Footer */}
           <div className="pt-8 flex flex-col space-y-6">
-            <div className="flex items-center space-x-6">
-              <a href="#" className="text-slate-500 hover:text-[#3B82F6] transition-colors"><Instagram className="w-6 h-6" /></a>
-              <a href="#" className="text-slate-500 hover:text-[#3B82F6] transition-colors"><Twitter className="w-6 h-6" /></a>
+            <div className="flex items-center justify-between w-full">
               <a href="#" className="text-slate-500 hover:text-[#3B82F6] transition-colors flex items-center space-x-2">
                 <BookOpen className="w-5 h-5" />
                 <span className="text-sm font-medium">Read Excerpt</span>
+              </a>
+              
+              <a href="#" className="text-slate-500 hover:text-[#3B82F6] transition-colors" title="Buy on Amazon Kindle">
+                <Tablet className="w-6 h-6" />
+              </a>
+
+              <a href="#" className="text-slate-500 hover:text-[#3B82F6] transition-colors">
+                <span className="text-sm font-medium">Testimonials</span>
               </a>
             </div>
             <p className="text-xs text-slate-600 uppercase tracking-widest">
