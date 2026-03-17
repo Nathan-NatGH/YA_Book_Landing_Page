@@ -110,7 +110,7 @@ export default function App() {
             </h1>
           </div>
 
-          <div className="space-y-6 text-lg text-slate-400 leading-relaxed">
+          <div className="space-y-6 text-lg text-slate-400 leading-relaxed translate-y-[2px]">
             <p>
               Janice had the secrets. The secret texts, the secret smiles, and the secret stolen moments with her best friend's man. She thought she was the only one who could pull it off.
             </p>
