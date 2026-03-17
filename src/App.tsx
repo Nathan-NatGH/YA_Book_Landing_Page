@@ -119,7 +119,7 @@ export default function App() {
               But when the truth hits the feed, they’ll all realize...
             </p>
             <p>
-              Join the inner circle. Get the exclusive cliffhanger breakdown and be the first to know when the sequel drops.
+              Don't trust the rumors. Enter your email to get the Part 2 release alert and exclusive sequel updates delivered the second they drop.
             </p>
           </div>
 
@@ -149,7 +149,7 @@ export default function App() {
                     <input 
                       type="email" 
                       required
-                      placeholder="Enter your email for the sneak peek..."
+                      placeholder="Fill it to spill it"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6] transition-all placeholder:text-slate-600"
@@ -160,7 +160,7 @@ export default function App() {
                     disabled={status === 'loading'}
                     className="w-full bg-[#F8FAFC] text-[#05070A] font-bold py-4 rounded-2xl flex items-center justify-center space-x-2 hover:bg-[#3B82F6] hover:text-white transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-[#3B82F6]/10"
                   >
-                    <span>{status === 'loading' ? 'Processing...' : 'Get the Secret Chapter'}</span>
+                    <span>{status === 'loading' ? 'Processing...' : 'ADD ME'}</span>
                     <ChevronRight className="w-5 h-5" />
                   </button>
 
