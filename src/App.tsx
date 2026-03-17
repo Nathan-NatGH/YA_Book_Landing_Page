@@ -194,7 +194,7 @@ export default function App() {
               </a>
             </div>
             <p className="text-xs text-slate-600 uppercase tracking-widest">
-              &copy; 2025 Nia Monroe. All Rights Reserved.
+              &copy; 2026 Nia Monroe. All Rights Reserved.
             </p>
           </div>
         </motion.div>
