@@ -3,16 +3,63 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import * as React from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, User, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Tablet } from 'lucide-react';
+import { Mail, User, ChevronRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db, handleFirestoreError, OperationType } from './firebase';
+
 const coverImage = '/cover.jpg';
 
-// Supabase Configuration
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://vsd6ipt7k7hl7tzkmydqhg.supabase.co";
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_6c2Rd92lLqrDf73u2L-vSw__daS9VZW";
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Error Boundary Component
+interface Props {
+  children: React.ReactNode;
+}
+
+interface State {
+  hasError: boolean;
+  error?: Error;
+}
+
+class ErrorBoundary extends (React.Component as any) {
+  constructor(props: Props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
+  }
+
+  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
+  }
+
+  public render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-[#05070A] text-[#F8FAFC] flex items-center justify-center p-6">
+          <div className="max-w-md w-full bg-white/5 border border-white/10 p-8 rounded-3xl text-center space-y-6">
+            <AlertCircle className="w-16 h-16 text-[#EF4444] mx-auto" />
+            <h1 className="text-2xl font-bold">Something went wrong</h1>
+            <p className="text-slate-400">
+              We encountered an unexpected error. Please refresh the page or try again later.
+            </p>
+            <button 
+              onClick={() => window.location.reload()}
+              className="w-full bg-[#F8FAFC] text-[#05070A] font-bold py-4 rounded-2xl hover:bg-[#3B82F6] hover:text-white transition-all"
+            >
+              Refresh Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 const testimonials = [
   {
@@ -38,6 +85,14 @@ const testimonials = [
 ];
 
 export default function App() {
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
+  );
+}
+
+function AppContent() {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -53,22 +108,19 @@ export default function App() {
     try {
       console.log("Starting submission for:", email);
       
-      // 1. Insert into Supabase
-      console.log("Inserting into Supabase...");
-      const { error: supabaseError } = await supabase
-        .from('leads')
-        .insert([{ email, first_name: firstName }]);
-
-      if (supabaseError) {
-        console.error("Supabase Error Details:", {
-          message: supabaseError.message,
-          details: supabaseError.details,
-          hint: supabaseError.hint,
-          code: supabaseError.code
+      // 1. Insert into Firebase Firestore
+      console.log("Inserting into Firestore...");
+      const leadsCollection = collection(db, 'leads');
+      try {
+        await addDoc(leadsCollection, {
+          email,
+          first_name: firstName,
+          createdAt: serverTimestamp()
         });
-        throw new Error(`Database Error: ${supabaseError.message} (Code: ${supabaseError.code})`);
+      } catch (firestoreErr) {
+        handleFirestoreError(firestoreErr, OperationType.CREATE, 'leads');
       }
-      console.log("Supabase insert successful.");
+      console.log("Firestore insert successful.");
 
       // 2. Trigger Resend Email via our API
       console.log("Calling /api/subscribe...");
@@ -98,11 +150,23 @@ export default function App() {
       console.error("Submission error:", err);
       setStatus('error');
       
-      // Make "Failed to fetch" more descriptive
+      // Handle Firebase specific errors or general errors
+      let message = err.message || 'Something went wrong. Please try again.';
+      
+      // Check if it's our JSON error from handleFirestoreError
+      try {
+        const parsedError = JSON.parse(err.message);
+        if (parsedError.error) {
+          message = `Database Error: ${parsedError.error}`;
+        }
+      } catch {
+        // Not a JSON error, use original message
+      }
+
       if (err.message === 'Failed to fetch') {
         setErrorMessage('Network Error: Could not reach the server. Please check your connection or ad-blocker.');
       } else {
-        setErrorMessage(err.message || 'Something went wrong. Please try again.');
+        setErrorMessage(message);
       }
     }
   };
