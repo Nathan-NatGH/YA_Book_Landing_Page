@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Tablet } from 'lucide-react';
+import coverImage from './assets/cover.jpg';
 
 // Supabase Configuration
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://erdbahuczgjgcvlylpna.supabase.co";
@@ -75,8 +76,7 @@ export default function App() {
             <div className="absolute -inset-1 bg-gradient-to-r from-[#3B82F6] to-[#EF4444] rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
             <div className="relative aspect-[2/3] w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-slate-900">
             <img 
-              key={`cover-${new Date().getTime()}`}
-              src={`/book-cover-final.jpg?t=${new Date().getTime()}`} 
+              src={coverImage} 
               alt="You Ain't The Only One Book Cover"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
@@ -84,10 +84,7 @@ export default function App() {
               onError={(e) => {
                 console.error('Image failed to load:', e);
                 const target = e.target as HTMLImageElement;
-                if (!target.src.includes('picsum')) {
-                  console.log('Falling back to placeholder...');
-                  target.src = 'https://picsum.photos/seed/book/800/1200';
-                }
+                console.log('Current src:', target.src);
               }}
             />
             {/* Overlay for mood */}
