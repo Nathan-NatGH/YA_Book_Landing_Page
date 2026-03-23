@@ -75,7 +75,7 @@ export default function App() {
             <div className="absolute -inset-1 bg-gradient-to-r from-[#3B82F6] to-[#EF4444] rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
             <div className="relative aspect-[2/3] w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-slate-900">
             <img 
-              src="/cover.jpg" 
+              src="/cover_v2.jpg?v=2" 
               alt="You Ain't The Only One Book Cover"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
