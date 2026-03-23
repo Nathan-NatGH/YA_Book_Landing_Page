@@ -20,6 +20,22 @@ async function startServer() {
     next();
   });
 
+  // Redirect any subpath (like /yatoo) to root
+  // This ensures that links from the ebook don't 404
+  app.get("*", (req, res, next) => {
+    const url = req.path;
+    const isRoot = url === "/";
+    const isApi = url.startsWith("/api");
+    const hasExtension = url.includes(".");
+    const isViteInternal = url.startsWith("/@") || url.startsWith("/node_modules") || url.startsWith("/src");
+
+    if (!isRoot && !isApi && !hasExtension && !isViteInternal) {
+      console.log(`Redirecting subpath ${url} to root`);
+      return res.redirect("/");
+    }
+    next();
+  });
+
   // Health check endpoint
   app.get("/api/health", (req, res) => {
     console.log("Health check requested");
