@@ -14,6 +14,29 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://erdbahuczgjgcv
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_6c2Rd92lLqrDf73u2L-vSw__daS9VZW";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+const testimonials = [
+  {
+    name: "Sarah J.",
+    text: "The drama is so thick you can cut it with a knife. I'm obsessed with Janice's journey.",
+    role: "Verified Reader"
+  },
+  {
+    name: "Marcus T.",
+    text: "Nia Monroe has a way of making you feel every secret. Part 2 is the only thing I'm waiting for.",
+    role: "Book Blogger"
+  },
+  {
+    name: "Elena R.",
+    text: "A masterclass in suspense and urban drama. I finished Part 1 in one sitting!",
+    role: "Verified Reader"
+  },
+  {
+    name: "David K.",
+    text: "If you think you know where this is going, you're wrong. The ending changed everything.",
+    role: "Urban Fiction Fan"
+  }
+];
+
 export default function App() {
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -202,25 +225,49 @@ export default function App() {
               )}
             </AnimatePresence>
           </div>
-
-          {/* Social Proof / Footer */}
-          <div className="pt-8 flex flex-col space-y-6">
-            <div className="flex items-center justify-between w-full">
-              <a href="#" className="text-slate-500 hover:text-[#3B82F6] transition-colors flex items-center space-x-2">
-                <BookOpen className="w-5 h-5" />
-                <span className="text-sm font-medium">Read Excerpt</span>
-              </a>
-              
-              <a href="#" className="text-slate-500 hover:text-[#3B82F6] transition-colors">
-                <span className="text-sm font-medium">Testimonials</span>
-              </a>
-            </div>
-            <p className="text-xs text-slate-600 uppercase tracking-widest">
-              &copy; 2026 Nia Monroe. All Rights Reserved.
-            </p>
-          </div>
         </motion.div>
       </main>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" className="relative z-10 max-w-6xl mx-auto px-6 py-24 border-t border-white/5">
+        <div className="space-y-12">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">What Readers Are Saying</h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">The rumors are true. Readers everywhere are losing their minds over Part 1.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {testimonials.map((t, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4 hover:bg-white/[0.07] transition-colors group"
+              >
+                <div className="flex space-x-1">
+                  {[...Array(5)].map((_, i) => (
+                    <div key={i} className="w-3 h-3 bg-[#3B82F6] rounded-full opacity-40 group-hover:opacity-100 transition-opacity" />
+                  ))}
+                </div>
+                <p className="text-slate-300 italic leading-relaxed">"{t.text}"</p>
+                <div>
+                  <p className="font-bold text-[#F8FAFC]">{t.name}</p>
+                  <p className="text-xs text-slate-500 uppercase tracking-widest">{t.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative z-10 max-w-6xl mx-auto px-6 py-12 border-t border-white/5 text-center">
+        <p className="text-xs text-slate-600 uppercase tracking-[0.3em]">
+          &copy; 2026 Nia Monroe. All Rights Reserved.
+        </p>
+      </footer>
 
       {/* Floating Elements for visual interest */}
       <div className="fixed bottom-10 right-10 hidden lg:block">
