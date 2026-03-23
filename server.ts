@@ -63,8 +63,18 @@ async function startServer() {
       });
 
       if (error) {
-        console.error("Resend Error:", error);
-        return res.status(500).json({ error: "Failed to send email" });
+        console.error("Resend Error Details:", JSON.stringify(error, null, 2));
+        
+        // Handle specific Resend errors
+        let userFriendlyError = "Failed to send email. Please try again later.";
+        
+        if (error.name === "validation_error" || error.message?.includes("onboarding")) {
+          userFriendlyError = "Domain not verified. In testing mode, you can only send emails to your own Resend account email.";
+        } else if (error.message?.includes("domain")) {
+          userFriendlyError = "Email domain not verified in Resend. Please check your Resend dashboard.";
+        }
+        
+        return res.status(400).json({ error: userFriendlyError, details: error });
       }
 
       res.json({ success: true, data });
