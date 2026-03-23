@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Tablet } from 'lucide-react';
+import { ChevronRight, CheckCircle2, AlertCircle, BookOpen } from 'lucide-react';
 
 // Supabase Configuration
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://erdbahuczgjgcvlylpna.supabase.co";
@@ -88,10 +88,18 @@ export default function App() {
             <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] via-transparent to-transparent opacity-60"></div>
             
             {/* Floating Badge */}
-            <div className="absolute bottom-6 left-6 right-6 p-4 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg">
-              <p className="text-xs uppercase tracking-widest text-[#3B82F6] font-bold mb-1">Part 1 Available on Amazon</p>
+            <a 
+              href="https://a.co/d/0aKwHSW6" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="absolute bottom-6 left-6 right-6 p-4 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg hover:bg-black/60 transition-colors group/badge"
+            >
+              <p className="text-xs uppercase tracking-widest text-[#3B82F6] font-bold mb-1 flex items-center justify-between">
+                Part 1 Available on Amazon
+                <ChevronRight className="w-3 h-3 opacity-0 group-hover/badge:opacity-100 transition-opacity" />
+              </p>
               <p className="text-sm text-slate-300 italic">"The secret is out, and it's louder than you think."</p>
-            </div>
+            </a>
           </div>
         </div>
       </motion.div>
@@ -106,7 +114,7 @@ export default function App() {
           <div className="space-y-4">
             <h1 className="text-5xl md:text-7xl font-bold tracking-tight leading-[0.9]">
               You Ain't <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#F8FAFC] to-[#94A3B8]">The Only One</span>
+              <div className="mt-4 h-16 md:h-24 w-full bg-[#C4C4C4] rounded-sm shadow-inner" />
             </h1>
           </div>
 
@@ -147,14 +155,13 @@ export default function App() {
                   exit={{ opacity: 0, y: -10 }}
                 >
                   <div className="relative group">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-[#3B82F6] transition-colors" />
                     <input 
                       type="email" 
                       required
                       placeholder="Fill it to spill it"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6] transition-all placeholder:text-slate-600"
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6] transition-all placeholder:text-slate-600"
                     />
                   </div>
                   
@@ -162,8 +169,10 @@ export default function App() {
                     disabled={status === 'loading'}
                     className="w-full bg-[#F8FAFC] text-[#05070A] font-bold py-4 rounded-2xl flex items-center justify-center space-x-2 hover:bg-[#3B82F6] hover:text-white transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-[#3B82F6]/10"
                   >
-                    <span>{status === 'loading' ? 'Processing...' : 'ADD ME'}</span>
-                    <ChevronRight className="w-5 h-5" />
+                    <span className="flex items-center">
+                      {status === 'loading' ? 'Processing...' : 'ADD ME'}
+                      {status !== 'loading' && <ChevronRight className="ml-2 w-5 h-5" />}
+                    </span>
                   </button>
 
                   {status === 'error' && (
@@ -185,10 +194,6 @@ export default function App() {
                 <span className="text-sm font-medium">Read Excerpt</span>
               </a>
               
-              <a href="#" className="text-slate-500 hover:text-[#3B82F6] transition-colors" title="Buy on Amazon Kindle">
-                <Tablet className="w-6 h-6" />
-              </a>
-
               <a href="#" className="text-slate-500 hover:text-[#3B82F6] transition-colors">
                 <span className="text-sm font-medium">Testimonials</span>
               </a>
