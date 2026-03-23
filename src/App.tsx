@@ -77,10 +77,7 @@ export default function App() {
             <img 
               src="/cover.jpg" 
               alt="You Ain't The Only One Book Cover"
-              className="w-full h-full object-cover transition-opacity duration-500"
-              referrerPolicy="no-referrer"
-              onLoad={(e) => (e.currentTarget.style.opacity = '1')}
-              style={{ opacity: 0 }}
+              className="w-full h-full object-cover border-2 border-red-500"
             />
             {/* Overlay for mood */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] via-transparent to-transparent opacity-60"></div>
