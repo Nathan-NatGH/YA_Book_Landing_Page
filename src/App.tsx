@@ -10,7 +10,7 @@ import { Mail, User, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Tablet }
 const coverImage = '/cover.jpg';
 
 // Supabase Configuration
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://vsd6ipt7k7hl7tzkmydq.supabase.co";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://vsd6ipt7k7hl7tzkmydqhg.supabase.co";
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_6c2Rd92lLqrDf73u2L-vSw__daS9VZW";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
