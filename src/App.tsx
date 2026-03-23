@@ -51,15 +51,22 @@ export default function App() {
     setErrorMessage('');
 
     try {
+      console.log("Starting submission for:", email);
       // 1. Insert into Supabase
+      console.log("Inserting into Supabase...");
       const { error: supabaseError } = await supabase
         .from('leads')
         .insert([{ email, first_name: firstName }]);
 
-      if (supabaseError) throw supabaseError;
+      if (supabaseError) {
+        console.error("Supabase Error:", supabaseError);
+        throw supabaseError;
+      }
+      console.log("Supabase insert successful.");
 
       // 2. Trigger Resend Email via our API
-      const response = await fetch('/api/subscribe', {
+      console.log("Calling /api/subscribe...");
+      const response = await fetch(`${window.location.origin}/api/subscribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, firstName }),

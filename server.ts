@@ -7,14 +7,22 @@ import dotenv from "dotenv";
 dotenv.config();
 
 async function startServer() {
+  console.log("Starting server function...");
   const app = express();
   const PORT = 3000;
 
   app.use(express.json());
   app.use(express.static(path.join(process.cwd(), "public")));
 
+  // Global request logger
+  app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+  });
+
   // Health check endpoint
   app.get("/api/health", (req, res) => {
+    console.log("Health check requested");
     res.json({ status: "ok" });
   });
 
