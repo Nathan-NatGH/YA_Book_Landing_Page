@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL || "https://erdbahuczgjgcvlylpna.supabase.co";
+const supabaseUrl = process.env.VITE_SUPABASE_URL || "https://vsd6ipt7k7hl7tzkmydq.supabase.co";
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_6c2Rd92lLqrDf73u2L-vSw__daS9VZW";
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);

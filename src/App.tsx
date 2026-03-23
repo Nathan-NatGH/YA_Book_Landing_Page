@@ -10,7 +10,7 @@ import { Mail, User, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Tablet }
 const coverImage = '/cover.jpg';
 
 // Supabase Configuration
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://erdbahuczgjgcvlylpna.supabase.co";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://vsd6ipt7k7hl7tzkmydq.supabase.co";
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_6c2Rd92lLqrDf73u2L-vSw__daS9VZW";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -66,8 +66,15 @@ export default function App() {
       });
 
       if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Failed to send welcome email');
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          const data = await response.json();
+          throw new Error(data.error || 'Failed to send welcome email');
+        } else {
+          const text = await response.text();
+          console.error("Non-JSON error response:", text);
+          throw new Error('Server error. Please check if RESEND_API_KEY is configured.');
+        }
       }
 
       setStatus('success');

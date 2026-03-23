@@ -20,6 +20,7 @@ async function startServer() {
 
   // API Route for subscription and email
   app.post("/api/subscribe", async (req, res) => {
+    console.log("Received subscription request for:", req.body.email);
     const { email, firstName } = req.body;
 
     if (!email) {
