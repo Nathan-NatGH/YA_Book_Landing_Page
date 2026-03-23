@@ -75,10 +75,16 @@ export default function App() {
             <div className="absolute -inset-1 bg-gradient-to-r from-[#3B82F6] to-[#EF4444] rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
             <div className="relative aspect-[2/3] w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-slate-900">
             <img 
-              src="/cover.png" 
+              src="/cover.jpg?v=312" 
               alt="You Ain't The Only One Book Cover"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
+              onLoad={() => console.log('Image loaded successfully')}
+              onError={(e) => {
+                console.error('Image failed to load:', e);
+                const target = e.target as HTMLImageElement;
+                console.log('Current src:', target.src);
+              }}
             />
             {/* Overlay for mood */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] via-transparent to-transparent opacity-60"></div>

@@ -13,7 +13,14 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json());
-  app.use(express.static(path.join(process.cwd(), "public")));
+  app.use(express.static(path.join(process.cwd(), "public"), {
+    setHeaders: (res) => {
+      res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+      res.set("Pragma", "no-cache");
+      res.set("Expires", "0");
+      res.set("Surrogate-Control", "no-store");
+    }
+  }));
 
   // API Route for subscription and email
   app.post("/api/subscribe", async (req, res) => {
