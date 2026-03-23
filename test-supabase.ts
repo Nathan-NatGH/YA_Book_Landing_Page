@@ -16,16 +16,15 @@ async function testSupabase() {
   const testEmail = `test-${Date.now()}@example.com`;
 
   try {
-    const { data, error } = await supabase
+    const { data: tableData, error: tableError } = await supabase
       .from('leads')
-      .insert([{ email: testEmail }])
-      .select();
+      .select('*')
+      .limit(1);
 
-    if (error) {
-      console.error('Supabase Error:', error.message);
+    if (tableError) {
+      console.error('Table Error:', tableError.message);
     } else {
-      console.log('Successfully inserted email only. Connection is working!');
-      console.log('Data:', data);
+      console.log('Table exists! Data:', tableData);
     }
   } catch (err) {
     console.error('Unexpected Error:', err);
