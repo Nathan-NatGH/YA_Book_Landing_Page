@@ -47,16 +47,16 @@ service cloud.firestore {
     // ===============================================================
 
     match /leads/{leadId} {
-      // Anyone can create a lead (signing up for the newsletter)
+      // Anyone can create or update a lead (signing up for the newsletter)
       // We don't require authentication for signups as it's a public landing page
       // leadId must match the email to enforce uniqueness
-      allow create: if isValidLead(request.resource.data) && leadId == request.resource.data.email;
+      allow create, update: if isValidLead(request.resource.data) && leadId == request.resource.data.email;
 
       // Only admins can read or list leads
       allow read: if isAdmin();
 
-      // Leads should not be updated or deleted by users
-      allow update, delete: if isAdmin();
+      // Leads should not be deleted by users
+      allow delete: if isAdmin();
     }
 
     // Default deny

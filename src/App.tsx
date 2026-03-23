@@ -109,20 +109,11 @@ function AppContent() {
       const normalizedEmail = email.toLowerCase().trim();
       const leadDocRef = doc(db, 'leads', normalizedEmail);
       
-      // Check if already exists to provide a smooth experience
-      const docSnap = await getDoc(leadDocRef);
-      if (docSnap.exists()) {
-        setStatus('success');
-        setFirstName('');
-        setEmail('');
-        return;
-      }
-
       await setDoc(leadDocRef, {
         email: normalizedEmail,
         first_name: firstName,
         createdAt: serverTimestamp()
-      });
+      }, { merge: true });
 
       setStatus('success');
       setFirstName('');
