@@ -20,7 +20,7 @@ async function startServer() {
 
   // API Route for subscription and email
   app.post("/api/subscribe", async (req, res) => {
-    const { email } = req.body;
+    const { email, firstName } = req.body;
 
     if (!email) {
       return res.status(400).json({ error: "Email is required" });
@@ -33,13 +33,15 @@ async function startServer() {
       }
       const resend = new Resend(apiKey);
 
+      const nameToUse = firstName || "there";
+
       const { data, error } = await resend.emails.send({
         from: "Nia Monroe <onboarding@resend.dev>",
         to: [email],
         subject: "You Ain't The Only One: The Truth is Out...",
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background-color: #05070A; color: #F8FAFC; padding: 40px; border-radius: 8px;">
-            <h1 style="color: #3B82F6; font-size: 24px; margin-bottom: 20px;">The secret is out, and it's louder than you think.</h1>
+            <h1 style="color: #3B82F6; font-size: 24px; margin-bottom: 20px;">Hey ${nameToUse}, the secret is out.</h1>
             <p style="font-size: 16px; line-height: 1.6; color: #94A3B8;">
               Janice thought she was the only one. Melissa thought she was the only one.
               But those two lines don't lie.

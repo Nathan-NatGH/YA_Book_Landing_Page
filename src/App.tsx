@@ -6,7 +6,7 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Tablet } from 'lucide-react';
+import { Mail, User, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Tablet } from 'lucide-react';
 const coverImage = '/cover.jpg';
 
 // Supabase Configuration
@@ -16,6 +16,7 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function App() {
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -30,7 +31,7 @@ export default function App() {
       // 1. Insert into Supabase
       const { error: supabaseError } = await supabase
         .from('leads')
-        .insert([{ email }]);
+        .insert([{ email, first_name: firstName }]);
 
       if (supabaseError) throw supabaseError;
 
@@ -38,7 +39,7 @@ export default function App() {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, firstName }),
       });
 
       if (!response.ok) {
@@ -157,6 +158,18 @@ export default function App() {
                   className="space-y-4"
                   exit={{ opacity: 0, y: -10 }}
                 >
+                  <div className="relative group">
+                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-[#3B82F6] transition-colors" />
+                    <input 
+                      type="text" 
+                      required
+                      placeholder="First Name"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:border-[#3B82F6] transition-all placeholder:text-slate-600"
+                    />
+                  </div>
+
                   <div className="relative group">
                     <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-[#3B82F6] transition-colors" />
                     <input 
