@@ -49,7 +49,8 @@ service cloud.firestore {
     match /leads/{leadId} {
       // Anyone can create a lead (signing up for the newsletter)
       // We don't require authentication for signups as it's a public landing page
-      allow create: if isValidLead(request.resource.data);
+      // leadId must match the email to enforce uniqueness
+      allow create: if isValidLead(request.resource.data) && leadId == request.resource.data.email;
 
       // Only admins can read or list leads
       allow read: if isAdmin();

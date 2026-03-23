@@ -7,10 +7,9 @@ import * as React from 'react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Mail, User, ChevronRight, CheckCircle2, AlertCircle } from 'lucide-react';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from './firebase';
-
-const coverImage = '/cover.jpg';
+import coverImage from './assets/cover.jpg';
 
 // Error Boundary Component
 interface Props {
@@ -100,49 +99,30 @@ function AppContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !firstName) return;
 
     setStatus('loading');
     setErrorMessage('');
 
     try {
-      console.log("Starting submission for:", email);
+      const normalizedEmail = email.toLowerCase().trim();
+      const leadDocRef = doc(db, 'leads', normalizedEmail);
       
-      // 1. Insert into Firebase Firestore
-      console.log("Inserting into Firestore...");
-      const leadsCollection = collection(db, 'leads');
-      try {
-        await addDoc(leadsCollection, {
-          email,
-          first_name: firstName,
-          createdAt: serverTimestamp()
-        });
-      } catch (firestoreErr) {
-        handleFirestoreError(firestoreErr, OperationType.CREATE, 'leads');
+      // Check if already exists to provide a smooth experience
+      const docSnap = await getDoc(leadDocRef);
+      if (docSnap.exists()) {
+        setStatus('success');
+        setFirstName('');
+        setEmail('');
+        return;
       }
-      console.log("Firestore insert successful.");
 
-      // 2. Trigger Resend Email via our API
-      console.log("Calling /api/subscribe...");
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, firstName }),
+      await setDoc(leadDocRef, {
+        email: normalizedEmail,
+        first_name: firstName,
+        createdAt: serverTimestamp()
       });
 
-      if (!response.ok) {
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          const data = await response.json();
-          throw new Error(data.error || 'Failed to send welcome email');
-        } else {
-          const text = await response.text();
-          console.error("Non-JSON error response:", text);
-          throw new Error('Server error. Please check if RESEND_API_KEY is configured.');
-        }
-      }
-
-      console.log("Email trigger successful.");
       setStatus('success');
       setFirstName('');
       setEmail('');
@@ -150,8 +130,7 @@ function AppContent() {
       console.error("Submission error:", err);
       setStatus('error');
       
-      // Handle Firebase specific errors or general errors
-      let message = err.message || 'Something went wrong. Please try again.';
+      let message = 'Something went wrong. Please try again.';
       
       // Check if it's our JSON error from handleFirestoreError
       try {
@@ -160,14 +139,13 @@ function AppContent() {
           message = `Database Error: ${parsedError.error}`;
         }
       } catch {
-        // Not a JSON error, use original message
+        // Not a JSON error, use original message if it's simple
+        if (err.message && err.message.length < 100) {
+          message = err.message;
+        }
       }
 
-      if (err.message === 'Failed to fetch') {
-        setErrorMessage('Network Error: Could not reach the server. Please check your connection or ad-blocker.');
-      } else {
-        setErrorMessage(message);
-      }
+      setErrorMessage(message);
     }
   };
 
@@ -263,8 +241,8 @@ function AppContent() {
                 >
                   <CheckCircle2 className="w-6 h-6 text-[#3B82F6] shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-bold text-lg">You're in.</h3>
-                    <p className="text-slate-400">Check your inbox. The truth is waiting for you.</p>
+                    <h3 className="font-bold text-lg">We got you.</h3>
+                    <p className="text-slate-400">You're on the list for Part 2 updates.</p>
                   </div>
                 </motion.div>
               ) : (

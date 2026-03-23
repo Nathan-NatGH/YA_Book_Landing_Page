@@ -26,7 +26,7 @@
   "firestore": {
     "leads": {
       "schema": "Lead",
-      "description": "Collection of leads who signed up for updates."
+      "description": "Collection of leads who signed up for updates. The email address is used as the document ID to ensure uniqueness."
     }
   }
 }
