@@ -13,6 +13,19 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json());
+
+  // Explicit route for the book cover to bypass any static middleware issues
+  app.get("/book-cover-final.jpg", (req, res) => {
+    res.sendFile(path.join(process.cwd(), "public", "book-cover-final.jpg"), {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0",
+        "Content-Type": "image/jpeg"
+      }
+    });
+  });
+
   app.use(express.static(path.join(process.cwd(), "public"), {
     setHeaders: (res) => {
       res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
