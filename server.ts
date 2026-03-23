@@ -22,8 +22,8 @@ async function startServer() {
 
   // Redirect any subpath (like /yatoo) to root
   // This ensures that links from the ebook don't 404
-  app.get("*", (req, res, next) => {
-    const url = req.path;
+  app.use((req, res, next) => {
+    const url = req.url.split('?')[0]; // Ignore query params
     const isRoot = url === "/";
     const isApi = url.startsWith("/api");
     const hasExtension = url.includes(".");
