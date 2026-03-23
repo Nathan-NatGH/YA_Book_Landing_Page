@@ -9,7 +9,8 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Mail, User, ChevronRight, CheckCircle2, AlertCircle } from 'lucide-react';
 import { collection, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from './firebase';
-import coverImage from './assets/cover.jpg';
+
+const coverImage = '/cover.jpg';
 
 // Error Boundary Component
 interface Props {
