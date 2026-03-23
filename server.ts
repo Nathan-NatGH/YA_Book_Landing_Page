@@ -6,14 +6,17 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
   app.use(express.json());
   app.use(express.static(path.join(process.cwd(), "public")));
+
+  // Health check endpoint
+  app.get("/api/health", (req, res) => {
+    res.json({ status: "ok" });
+  });
 
   // API Route for subscription and email
   app.post("/api/subscribe", async (req, res) => {
@@ -24,6 +27,12 @@ async function startServer() {
     }
 
     try {
+      const apiKey = process.env.RESEND_API_KEY;
+      if (!apiKey) {
+        throw new Error("RESEND_API_KEY is not configured");
+      }
+      const resend = new Resend(apiKey);
+
       const { data, error } = await resend.emails.send({
         from: "Nia Monroe <onboarding@resend.dev>",
         to: [email],
