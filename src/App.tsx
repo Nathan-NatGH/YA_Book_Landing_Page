@@ -73,12 +73,14 @@ export default function App() {
           <h2 className="text-[#3B82F6] font-mono text-sm tracking-[0.2em] uppercase text-center">Nia Monroe Presents</h2>
           <div className="relative">
             <div className="absolute -inset-1 bg-gradient-to-r from-[#3B82F6] to-[#EF4444] rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
-            <div className="relative aspect-[2/3] w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10">
+            <div className="relative aspect-[2/3] w-full max-w-md mx-auto rounded-xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 bg-slate-900">
             <img 
               src="/cover.jpg" 
               alt="You Ain't The Only One Book Cover"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-opacity duration-500"
               referrerPolicy="no-referrer"
+              onLoad={(e) => (e.currentTarget.style.opacity = '1')}
+              style={{ opacity: 0 }}
             />
             {/* Overlay for mood */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#05070A] via-transparent to-transparent opacity-60"></div>
