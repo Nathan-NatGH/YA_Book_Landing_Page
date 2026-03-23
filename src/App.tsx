@@ -10,7 +10,7 @@ import { Mail, User, ChevronRight, CheckCircle2, AlertCircle, BookOpen, Tablet }
 const coverImage = '/cover.jpg';
 
 // Supabase Configuration
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://vsd6ipt7k7hl7tzkmydq.supabase.co";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://vsd6ipt7k7hl7tzkmydqhg.supabase.co";
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "sb_publishable_6c2Rd92lLqrDf73u2L-vSw__daS9VZW";
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -52,6 +52,7 @@ export default function App() {
 
     try {
       console.log("Starting submission for:", email);
+      
       // 1. Insert into Supabase
       console.log("Inserting into Supabase...");
       const { error: supabaseError } = await supabase
@@ -60,13 +61,13 @@ export default function App() {
 
       if (supabaseError) {
         console.error("Supabase Error:", supabaseError);
-        throw supabaseError;
+        throw new Error(`Database Error: ${supabaseError.message}`);
       }
       console.log("Supabase insert successful.");
 
       // 2. Trigger Resend Email via our API
       console.log("Calling /api/subscribe...");
-      const response = await fetch(`${window.location.origin}/api/subscribe`, {
+      const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, firstName }),
@@ -84,12 +85,20 @@ export default function App() {
         }
       }
 
+      console.log("Email trigger successful.");
       setStatus('success');
+      setFirstName('');
       setEmail('');
     } catch (err: any) {
-      console.error(err);
+      console.error("Submission error:", err);
       setStatus('error');
-      setErrorMessage(err.message || 'Something went wrong. Please try again.');
+      
+      // Make "Failed to fetch" more descriptive
+      if (err.message === 'Failed to fetch') {
+        setErrorMessage('Network Error: Could not reach the server. Please check your connection or ad-blocker.');
+      } else {
+        setErrorMessage(err.message || 'Something went wrong. Please try again.');
+      }
     }
   };
 
