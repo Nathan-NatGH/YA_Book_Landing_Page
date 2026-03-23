@@ -13,7 +13,7 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json());
-  app.use(express.static("public"));
+  app.use(express.static(path.join(process.cwd(), "public")));
 
   // API Route for subscription and email
   app.post("/api/subscribe", async (req, res) => {
