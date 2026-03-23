@@ -13,27 +13,7 @@ async function startServer() {
   const PORT = 3000;
 
   app.use(express.json());
-
-  // Explicit route for the book cover to bypass any static middleware issues
-  app.get("/book-cover-final.jpg", (req, res) => {
-    res.sendFile(path.join(process.cwd(), "public", "book-cover-final.jpg"), {
-      headers: {
-        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0",
-        "Content-Type": "image/jpeg"
-      }
-    });
-  });
-
-  app.use(express.static(path.join(process.cwd(), "public"), {
-    setHeaders: (res) => {
-      res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
-      res.set("Pragma", "no-cache");
-      res.set("Expires", "0");
-      res.set("Surrogate-Control", "no-store");
-    }
-  }));
+  app.use(express.static(path.join(process.cwd(), "public")));
 
   // API Route for subscription and email
   app.post("/api/subscribe", async (req, res) => {
@@ -44,20 +24,19 @@ async function startServer() {
     }
 
     try {
-      // Send Welcome Email via Resend
       const { data, error } = await resend.emails.send({
-        from: "Nia Monroe <onboarding@resend.dev>", // Note: In production, use a verified domain
+        from: "Nia Monroe <onboarding@resend.dev>",
         to: [email],
         subject: "You Ain't The Only One: The Truth is Out...",
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background-color: #05070A; color: #F8FAFC; padding: 40px; border-radius: 8px;">
             <h1 style="color: #3B82F6; font-size: 24px; margin-bottom: 20px;">The secret is out, and it's louder than you think.</h1>
             <p style="font-size: 16px; line-height: 1.6; color: #94A3B8;">
-              Janice thought she was the only one. Melissa thought she was the only one. 
+              Janice thought she was the only one. Melissa thought she was the only one.
               But those two lines don't lie.
             </p>
             <p style="font-size: 16px; line-height: 1.6; color: #94A3B8;">
-              Thank you for signing up for updates on <strong>'You Ain't The Only One'</strong>. 
+              Thank you for signing up for updates on <strong>'You Ain't The Only One'</strong>.
               You're now on the list for exclusive sneak peeks, character reveals, and the first word on the sequel's release.
             </p>
             <div style="margin: 30px 0; padding: 20px; border-left: 4px solid #EF4444; background-color: rgba(239, 68, 68, 0.1);">
@@ -65,12 +44,8 @@ async function startServer() {
                 "In seven months, there could be two of them. I close my eyes. And wait."
               </p>
             </div>
-            <p style="font-size: 16px; line-height: 1.6; color: #94A3B8;">
-              Stay tuned. The drama is just getting started.
-            </p>
-            <p style="margin-top: 40px; font-size: 14px; color: #64748B;">
-              — Nia Monroe
-            </p>
+            <p style="font-size: 16px; line-height: 1.6; color: #94A3B8;">Stay tuned. The drama is just getting started.</p>
+            <p style="margin-top: 40px; font-size: 14px; color: #64748B;">— Nia Monroe</p>
           </div>
         `,
       });
