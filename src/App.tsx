@@ -6,9 +6,10 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Mail, User, ChevronRight, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Mail, User, ChevronRight, CheckCircle2, AlertCircle, Facebook, Twitter, Link as LinkIcon, Share2 } from 'lucide-react';
 import { collection, doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
 import { db, handleFirestoreError, OperationType } from './firebase';
+import { Toaster, toast } from 'sonner';
 
 const coverImage = '/cover.jpg';
 
@@ -87,6 +88,7 @@ const testimonials = [
 export default function App() {
   return (
     <ErrorBoundary>
+      <Toaster position="top-center" richColors />
       <AppContent />
     </ErrorBoundary>
   );
@@ -293,6 +295,49 @@ function AppContent() {
                 </motion.form>
               )}
             </AnimatePresence>
+          </div>
+
+          {/* Social Sharing */}
+          <div className="pt-6 border-t border-white/5 space-y-4">
+            <p className="text-xs uppercase tracking-widest text-slate-500 font-bold flex items-center">
+              <Share2 className="w-3 h-3 mr-2" />
+              Spread the word
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <button 
+                onClick={() => {
+                  const url = encodeURIComponent(window.location.href);
+                  const text = encodeURIComponent("The secret is out. Check out 'You Ain't The Only One' by Nia Monroe.");
+                  window.open(`https://twitter.com/intent/tweet?url=${url}&text=${text}`, '_blank');
+                }}
+                className="flex items-center space-x-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-[#3B82F6]/10 hover:border-[#3B82F6]/30 transition-all group"
+              >
+                <Twitter className="w-4 h-4 text-slate-400 group-hover:text-[#3B82F6]" />
+                <span className="text-sm font-medium">Twitter</span>
+              </button>
+
+              <button 
+                onClick={() => {
+                  const url = encodeURIComponent(window.location.href);
+                  window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+                }}
+                className="flex items-center space-x-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-[#3B82F6]/10 hover:border-[#3B82F6]/30 transition-all group"
+              >
+                <Facebook className="w-4 h-4 text-slate-400 group-hover:text-[#3B82F6]" />
+                <span className="text-sm font-medium">Facebook</span>
+              </button>
+
+              <button 
+                onClick={() => {
+                  navigator.clipboard.writeText(window.location.href);
+                  toast.success('Link copied to clipboard!');
+                }}
+                className="flex items-center space-x-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl hover:bg-[#3B82F6]/10 hover:border-[#3B82F6]/30 transition-all group"
+              >
+                <LinkIcon className="w-4 h-4 text-slate-400 group-hover:text-[#3B82F6]" />
+                <span className="text-sm font-medium">Copy Link</span>
+              </button>
+            </div>
           </div>
         </motion.div>
       </main>
